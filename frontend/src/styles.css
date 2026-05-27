@@ -12,3 +12,9 @@
     background-color: rgba(17, 25, 40, 0.62);
   }
 }
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
