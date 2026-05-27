@@ -22,12 +22,11 @@ export class LoginService {
   }
 
   logout() {
-    return this.client.post(`${this.baseUrl}/logout`, {}, {withCredentials: true}).pipe(tap(() => this.auth.clear()));
+    return this.client.post(`${this.baseUrl}/logout`, {}).pipe(tap(() => this.auth.clear()));
   }
 
   refreshToken() {
     return this.client.post<any>(`${this.baseUrl}/refresh`, {}, {
-      withCredentials: true,
       observe: 'response'
     }).pipe(tap(res => {
       this.getUser().subscribe(user => this.auth.setUser(user))
@@ -35,6 +34,6 @@ export class LoginService {
   }
 
   getUser() {
-    return this.client.get<UserModel>(`${this.baseUrl}/user`, {withCredentials: true});
+    return this.client.get<UserModel>(`${this.baseUrl}/user`);
   }
 }

@@ -11,7 +11,7 @@ import {createHttpParams} from '../../utils/create-htttp-params.util';
 @Injectable({
   providedIn: 'root',
 })
-export class User {
+export class UserService {
   private readonly baseUrl = `${environment.apiUrl}/user`;
   constructor(private client: HttpClient) {
   }
@@ -21,15 +21,15 @@ export class User {
   }
 
   updateUser(userModel: UpdateUserModel) {
-    return this.client.put<UserModel>(`${this.baseUrl}/update`, userModel, { withCredentials: true});
+    return this.client.put<UserModel>(`${this.baseUrl}/update`, userModel);
   }
 
   deleteUser(id: number) {
-    return this.client.delete<void>(`${this.baseUrl}/delete/${id}`, { withCredentials: true});
+    return this.client.delete<void>(`${this.baseUrl}/delete/${id}`);
   }
 
   listUsers(userCriteria?: UserCriteriaFilter) {
     const params = createHttpParams({...userCriteria})
-    return this.client.get<PageResponse<UserModel[]>>(`${this.baseUrl}/list`, {params, withCredentials: true});
+    return this.client.get<PageResponse<UserModel[]>>(`${this.baseUrl}/list`, {params});
   }
 }
