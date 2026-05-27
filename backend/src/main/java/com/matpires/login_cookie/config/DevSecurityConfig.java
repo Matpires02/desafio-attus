@@ -29,7 +29,7 @@ public class DevSecurityConfig {
 
         return http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**", "/auth/**") // 👈 ESSENCIAL
+                        .ignoringRequestMatchers("/h2-console/**", "/auth/**")
                         .csrfTokenRepository(
                                 CookieCsrfTokenRepository.withHttpOnlyFalse()
                         )
