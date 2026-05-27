@@ -4,7 +4,7 @@ import {inputClasses} from '../../utils/input-classes.util';
 import {MatError} from '@angular/material/input';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LoginModel} from '../../models/login/login.model';
-import {LoginService} from '../../service/login/login-service';
+import {LoginService} from '../../service/login/login.service';
 import {Router} from '@angular/router';
 import {AuthService} from '../../service/auth/auth.service';
 import {UserRole} from '../../models/user/user-role.enum';
