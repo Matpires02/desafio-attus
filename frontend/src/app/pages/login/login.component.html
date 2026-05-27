@@ -1,0 +1,46 @@
+<div class="w-full h-full flex items-center justify-center mt-16 mb-32 mx-auto max-w-md">
+  <form
+    (ngSubmit)="onLogin()"
+    [formGroup]="loginForm"
+    class="flex-1 flex flex-col gap-6 py-16 px-8 card">
+    <h1 class="text-center text-2xl font-extrabold">Login</h1>
+    <div class="input-group">
+      <input [ngClass]="inputClasses" class="input" formControlName="email" id="email" name="email" placeholder="Email"
+             type="email"/>
+      @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+        <mat-error class="ps-2 font-thin text-red-400">
+          @if (loginForm.controls.email.errors?.['required']) {
+            Digite um e-mail
+          }
+
+          @if (loginForm.controls.email.errors?.['email']) {
+            Digite um e-mail válido
+          }
+        </mat-error>
+      }
+    </div>
+    <div class="input-group">
+      <input [ngClass]="inputClasses" formControlName="password" id="password" name="password" placeholder="Password"
+             type="password">
+      @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+        <mat-error class="ps-2 font-thin text-red-400">
+          @if (loginForm.controls.password.errors?.['required']) {
+            Digite uma senha
+          }
+        </mat-error>
+      }
+    </div>
+
+    <button [disabled]="loading || loginForm.invalid"
+            class="disabled:cursor-not-allowed cursor-pointer text-base/tight py-2 px-4 rounded-md gap-2 bg-blue-600 text-blue-100 hover:bg-blue-700 disabled:hover:bg-blue-600"
+            type="submit">
+      Login
+    </button>
+
+    @if (error()) {
+      <p class="text-red-400">
+        Ocorreu um erro ao realizar o login.
+      </p>
+    }
+  </form>
+</div>
