@@ -23,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public void register(RegisterRequestDto dto) {
-
+        log.debug("Registering user {}", dto.getEmail());
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Email já cadastrado");
         }

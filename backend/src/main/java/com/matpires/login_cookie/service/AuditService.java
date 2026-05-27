@@ -2,9 +2,11 @@ package com.matpires.login_cookie.service;
 
 import com.matpires.login_cookie.entity.AuditLog;
 import com.matpires.login_cookie.repository.AuditLogRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuditService {
 
     private final AuditLogRepository repository;
@@ -18,6 +20,7 @@ public class AuditService {
                     String method,
                     String ip,
                     boolean success) {
+        log.info("Logging action: {}", action);
 
         AuditLog log = new AuditLog();
         log.setAction(action);
