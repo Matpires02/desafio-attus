@@ -1,6 +1,5 @@
 package com.matpires.login_cookie.controller;
 
-import com.matpires.login_cookie.security.RateLimitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

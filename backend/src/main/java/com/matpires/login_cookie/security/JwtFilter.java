@@ -1,10 +1,7 @@
 package com.matpires.login_cookie.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -23,83 +19,45 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtAuthConverter converter;
     private final JwtService jwtService;
-    private final TokenBlacklistService tokenBlacklistService;
-    private final RateLimitService rateLimitService;
 
-    public JwtFilter(JwtAuthConverter converter, JwtService jwtService, TokenBlacklistService tokenBlacklistService, RateLimitService rateLimitService) {
+    public JwtFilter(JwtAuthConverter converter, JwtService jwtService) {
         this.converter = converter;
         this.jwtService = jwtService;
-        this.tokenBlacklistService = tokenBlacklistService;
-        this.rateLimitService = rateLimitService;
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain chain)
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain)
             throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
 
-        // 🔓 Permitir endpoints públicos sem bloquear
-        String path = request.getRequestURI();
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.replace("Bearer ", "");
 
-        if (path.startsWith("/auth")) {
-            chain.doFilter(request, response);
-            return;
-        }
+            if (jwtService.isTokenValid(token)) {
 
-        String token = extractCookie(request, "access_token");
+                List<String> roles = jwtService.extractRoles(token);
+                String username = jwtService.extractEmail(token);
 
-        String id = getClientIP(request);
+                UsernamePasswordAuthenticationToken auth =
+                        converter.convert(username, roles);
 
-        if (token == null || !jwtService.isTokenValid(token)) {
-            rateLimitService.incrementFailedAttempts(id);
-            chain.doFilter(request, response);
-            return;
-        }
-        try {
-            String username = jwtService.extractEmail(token);
-            String jti = jwtService.extractJti(token);
 
-            // 🚨 PROTEÇÃO REPLAY ATTACK
-            if (tokenBlacklistService.isBlacklisted(jti)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido (replay detectado)");
-                rateLimitService.incrementFailedAttempts(id);
-                return;
+                auth.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request)
+                );
+
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(auth);
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-
-            // 👤 Extrair roles do token (SEM consultar banco)
-            List<String> roles = jwtService.extractRoles(token);
-
-
-            UsernamePasswordAuthenticationToken auth = converter.convert(username, roles);
-            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            rateLimitService.reset(id);
-
-        } catch (Exception e) {
-            rateLimitService.incrementFailedAttempts(id);
-            // ⚠️ Evita quebrar a aplicação por erro de token
-            SecurityContextHolder.clearContext();
         }
 
         chain.doFilter(request, response);
-    }
-
-    private String extractCookie(HttpServletRequest request, String name) {
-        if (request.getCookies() == null) return null;
-
-        return Arrays.stream(request.getCookies())
-                .filter(c -> name.equals(c.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private String getClientIP(HttpServletRequest request) {
-        String xfHeader = request.getHeader("X-Forwarded-For");
-        return (xfHeader == null)
-                ? request.getRemoteAddr()
-                : xfHeader.split(",")[0];
     }
 }

@@ -1,6 +1,5 @@
 package com.matpires.login_cookie.security;
 
-import com.matpires.login_cookie.config.CookieUtil;
 import com.matpires.login_cookie.entity.User;
 import com.matpires.login_cookie.enums.RoleName;
 import com.matpires.login_cookie.repository.RoleRepository;
