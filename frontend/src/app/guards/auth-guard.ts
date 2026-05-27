@@ -1,20 +1,37 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject} from '@angular/core';
 import {UserStore} from '../store/user.store';
+import {UserService} from '../service/user/user.service';
+import {LoginService} from '../service/login/login.service';
+import {lastValueFrom} from 'rxjs';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = async (route, state) => {
   const userStore = inject(UserStore);
+  const loginService = inject(LoginService);
   const router = inject(Router);
-  console.log(route.data)
   const role = route.data['roles'];
   if (!role) {
     return true;
   }
 
-  if (userStore.isAuthenticated() && userStore.hasRole(role)) {
+  if (userStore.isAuthenticated()) {
+    if (!userStore.hasAnyRole(role)) {
+      router.navigate(['/404']);
+      return false
+    }
     return true;
-  }
+  } else {
+    if (localStorage.getItem('token')) {
+      await lastValueFrom(loginService.getUser());
 
-  router.navigate(['/404']);
-  return false;
+      if (!userStore.hasAnyRole(role)) {
+        router.navigate(['/404']);
+        return false
+      }
+      return true;
+    } else {
+      router.navigate(['/login']);
+      return false;
+    }
+  }
 };
