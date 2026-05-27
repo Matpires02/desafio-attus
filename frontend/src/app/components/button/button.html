@@ -1,0 +1,12 @@
+<button (click)="onClickEmitter.emit()"
+        [class.w-full]="fullButton"
+        [disabled]="disabled"
+        [ngClass]="customClass"
+        [title]="title"
+        [type]="type"
+        class="flex justify-center items-center gap-2 disabled:cursor-not-allowed cursor-pointer text-base/tight py-2 px-4 rounded-md gap-2 bg-blue-600 text-blue-100 hover:bg-blue-700 disabled:hover:bg-blue-600">
+  @if (icon) {
+    <mat-icon>{{ icon }}</mat-icon>
+  }
+  <span class="self-end-safe">{{ text }}</span>
+</button>
