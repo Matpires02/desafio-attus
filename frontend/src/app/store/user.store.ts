@@ -23,7 +23,8 @@ export class UserStore {
     this._user.set(null);
   }
 
-  hasRole(role: UserRole): boolean {
+  hasRole(role?: UserRole): boolean {
+    if (!role) return false;
     return this.roles().includes(role);
   }
 }
