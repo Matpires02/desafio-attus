@@ -1,0 +1,1 @@
+export const inputClasses = 'bg-white outline-0 ring-2 ring-slate-400 rounded p-2 text-slate-600 transition focus:ring-blue-600 placeholder-slate-400 disabled:bg-slate-200 disabled:placeholder-slate-400 disabled:text-slate-400 disabled:cursor-not-allowed read-only:bg-slate-200 read-only:placeholder-slate-400'
