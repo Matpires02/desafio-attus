@@ -1,1 +1,5 @@
-<p>user works!</p>
+<div class="w-full h-full flex items-center justify-center mx-auto">
+  <app-user-form (actionComplete)="onUpdateUser()"
+                 [isAdmin]="userStore.hasRole(UserRole.ADMIN)" [user]="userStore.user()"
+                 message='Atualize os campos que quiser e clique em enviar para salvar'></app-user-form>
+</div>
