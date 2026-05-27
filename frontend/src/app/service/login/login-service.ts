@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {LoginModel} from '../../models/login/login.model';
@@ -11,6 +11,7 @@ import {UserModel} from '../../models/user/user.model';
 })
 export class LoginService {
   private readonly baseUrl = `${environment.apiUrl}/auth`;
+
   constructor(private client: HttpClient, private auth: AuthService) {
   }
 
@@ -21,14 +22,19 @@ export class LoginService {
   }
 
   logout() {
-    return this.client.post(`${this.baseUrl}/logout`, {}, { withCredentials: true}).pipe(tap(()=> this.auth.clear()));
+    return this.client.post(`${this.baseUrl}/logout`, {}, {withCredentials: true}).pipe(tap(() => this.auth.clear()));
   }
 
   refreshToken() {
-    return this.client.post(`${this.baseUrl}/refresh`, {}, { withCredentials: true});
+    return this.client.post<any>(`${this.baseUrl}/refresh`, {}, {
+      withCredentials: true,
+      observe: 'response'
+    }).pipe(tap(res => {
+      this.getUser().subscribe(user => this.auth.setUser(user))
+    }));
   }
 
   getUser() {
-    return this.client.get<UserModel>(`${this.baseUrl}/user`, { withCredentials: true});
+    return this.client.get<UserModel>(`${this.baseUrl}/user`, {withCredentials: true});
   }
 }
