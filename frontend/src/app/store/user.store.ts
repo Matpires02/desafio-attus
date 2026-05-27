@@ -27,4 +27,9 @@ export class UserStore {
     if (!role) return false;
     return this.roles().includes(role);
   }
+
+  hasAnyRole(roles?: UserRole[]): boolean {
+    if (!roles || roles.length === 0) return false;
+    return this.roles().some(r => roles.includes(r));
+  }
 }
