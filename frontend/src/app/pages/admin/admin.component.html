@@ -1,9 +1,9 @@
 <div class="w-full h-full flex flex-col items-center justify-center mt-16 mb-32 mx-auto max-w-3/4 gap-8">
   <h1 class="font-bolder text-4xl">Listagem de usuários</h1>
 
-  <app-button text="Criar usuário" title="criar usuário" routerLink="/admin/user/create"></app-button>
+  <app-button text="Criar usuário" title="criar usuário" (onClick)="redirectToCreate()" type="button"></app-button>
 
-  <div class="h-full w-full">
+  <div class=" w-full">
     <table [dataSource]="users" class="mat-elevation-z8" mat-table>
 
       <ng-container matColumnDef="id">
@@ -29,7 +29,7 @@
       <ng-container matColumnDef="activated">
         <th *matHeaderCellDef mat-header-cell> Ativo</th>
         <td *matCellDef="let element" mat-cell>
-          <mat-icon>{{ element.activated ? 'checked' : 'home' }}</mat-icon>
+          <mat-icon>{{ element.activated ? 'checked' : 'close' }}</mat-icon>
         </td>
       </ng-container>
 
@@ -54,8 +54,10 @@
     </table>
 
     <mat-paginator [length]="totalLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
-                   aria-label="Select page of periodic elements"
+                   aria-label="Select page of periodic elements" (page)="this.load($event.pageIndex, $event.pageSize)"
                    showFirstLastButtons>
     </mat-paginator>
   </div>
+
+  <app-button title="Logout" text="Logout" (onClick)="logout()"></app-button>
 </div>
