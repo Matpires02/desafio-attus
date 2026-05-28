@@ -5,6 +5,7 @@ import {UserCriteriaFilter} from '../../models/user/user-criteria.filter';
 import {createHttpParams} from '../../shared/create-htttp-params.util';
 import {PageResponse} from '../../models/page/page-response.model';
 import {environment} from '../../../environments/environment';
+import {UpdateUserModel} from '../../models/user/update-user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +17,15 @@ export class AdminService {
   }
 
   deleteUser(id: string) {
-    return this.client.delete<void>(`${this.baseUrl}/user/delete/${id}`);
+    return this.client.delete<void>(`${this.baseUrl}/user/${id}`);
   }
 
   getUser(id: string) {
-    return this.client.get<void>(`${this.baseUrl}/user/${id}`);
+    return this.client.get<UserModel>(`${this.baseUrl}/user/${id}`);
+  }
+
+  updateUser(user: UpdateUserModel) {
+    return this.client.put<UserModel>(`${this.baseUrl}/user/update`, user);
   }
 
   listUsers(userCriteria?: UserCriteriaFilter) {
