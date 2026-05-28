@@ -4,12 +4,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
+@ToString
 public class UpdateUserDto {
 
     @NotNull
@@ -18,6 +20,7 @@ public class UpdateUserDto {
     @Email
     private String email;
 
+    @ToString.Exclude
     private String password;
 
     private Set<String> roles;

@@ -30,7 +30,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     public void register(RegisterRequestDto dto) {
-        log.debug("Registering user {}", dto.getEmail());
+        log.debug("Registering user {}", dto);
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Email já cadastrado");
         }
@@ -56,13 +56,13 @@ public class UserService {
         }
 
         user.setRoles(roles);
-        user.setActivated(true);
+        user.setActivated(dto.getActivated() != null ? dto.getActivated() : true);
 
         userRepository.save(user);
     }
 
     public UserDto update(UpdateUserDto dto) {
-        log.debug("Updating user {}", dto.getEmail());
+        log.debug("Updating user {}", dto);
         User user = userRepository.findById(dto.getId()).orElseThrow(UserNotFoundException::new);
 
         if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
