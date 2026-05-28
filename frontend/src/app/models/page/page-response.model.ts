@@ -1,4 +1,7 @@
 export interface PageResponse<D> {
-  data: D,
-  total: number,
+  content: D,
+  totalElements: number,
+  totalPages: number,
+  size: number,
+  pageable: { pageNumber: number}
 }
