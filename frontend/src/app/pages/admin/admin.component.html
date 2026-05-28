@@ -1,1 +1,61 @@
-<p>admin works!</p>
+<div class="w-full h-full flex flex-col items-center justify-center mt-16 mb-32 mx-auto max-w-3/4 gap-8">
+  <h1 class="font-bolder text-4xl">Listagem de usuários</h1>
+
+  <app-button text="Criar usuário" title="criar usuário" routerLink="/admin/user/create"></app-button>
+
+  <div class="h-full w-full">
+    <table [dataSource]="users" class="mat-elevation-z8" mat-table>
+
+      <ng-container matColumnDef="id">
+        <th *matHeaderCellDef mat-header-cell> ID</th>
+        <td *matCellDef="let element" mat-cell> {{ element.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th *matHeaderCellDef mat-header-cell> E-mail</th>
+        <td *matCellDef="let element" mat-cell> {{ element.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef mat-header-cell> E-mail</th>
+        <td *matCellDef="let element" mat-cell> {{ element.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="roles">
+        <th *matHeaderCellDef mat-header-cell> Permissões</th>
+        <td *matCellDef="let element" mat-cell> {{ element.roles?.join(', ') }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activated">
+        <th *matHeaderCellDef mat-header-cell> Ativo</th>
+        <td *matCellDef="let element" mat-cell>
+          <mat-icon>{{ element.activated ? 'checked' : 'home' }}</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell> E-mail</th>
+        <td *matCellDef="let element" mat-cell>
+          <button [routerLink]="['/admin/user/edit', element.id]" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="deleteUser(element.id)" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+      <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" colspan="4">Não foram encontrados dados</td>
+      </tr>
+    </table>
+
+    <mat-paginator [length]="totalLength" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                   aria-label="Select page of periodic elements"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
