@@ -1,5 +1,6 @@
-<div class="w-full h-full flex items-center justify-center mx-auto">
+<div class="w-full h-full flex flex-col items-center justify-center mx-auto gap-6">
   <app-user-form (actionComplete)="onUpdateUser()"
-                 [isAdmin]="userStore.hasRole(UserRole.ADMIN)" [user]="userStore.user()"
+                 [isAdmin]="userStore.hasRole(UserRole.ADMIN)" [user]="userStore.hasRole(UserRole.ADMIN) ? user : userStore.user()"
                  message='Atualize os campos que quiser e clique em enviar para salvar'></app-user-form>
+  <app-button title="Logout" text="Logout" (onClick)="logout()"></app-button>
 </div>
