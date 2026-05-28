@@ -1,4 +1,4 @@
-# 🔐 LoginComponent Cookie API (Spring Boot)
+# 🔐 Desafio Attus
 
 API de autenticação segura utilizando **Spring Boot 4**, com:
 
