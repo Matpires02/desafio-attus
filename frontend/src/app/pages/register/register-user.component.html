@@ -1,3 +1,3 @@
 <div class="w-full h-full flex items-center justify-center mx-auto">
-  <app-user-form (actionComplete)="onCreateUser()" [isAdmin]="false"></app-user-form>
+  <app-user-form (actionComplete)="onCreateUser()" [isAdmin]="userStore.hasRole(UserRole.ADMIN)" [user]="null"></app-user-form>
 </div>
