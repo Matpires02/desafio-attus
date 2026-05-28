@@ -29,10 +29,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public void register(RegisterRequestDto dto) {
+    public void register(RegisterRequestDto dto) throws Exception {
         log.debug("Registering user {}", dto);
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new EmailAlreadyUsedException();
         }
 
         User user = new User();

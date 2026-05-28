@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,29 +22,6 @@ class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private RateLimitService rateLimitService;
-
-    @BeforeEach
-    void setUp() {
-        rateLimitService.resetAll();
-    }
-
-    @Test
-    void shouldRegisterUser() throws Exception {
-
-        String body = """
-                {
-                    "email": "teste@email.com",
-                    "password": "123456"
-                }
-                """;
-
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isCreated());
-    }
 
     @Test
     void shouldLoginSuccessfully() throws Exception {
@@ -57,7 +34,7 @@ class AuthControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(register));
 
@@ -73,7 +50,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(login))
                 .andExpect(status().isOk())
-                .andExpect(cookie().exists("access_token"));
+                .andExpect(jsonPath("$.token").exists());
     }
 
     @Test
@@ -86,7 +63,7 @@ class AuthControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(register));
 

@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequestDto dto) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequestDto dto) throws Exception {
         log.info("Request Registering user {}", dto.getEmail());
         userService.register(dto);
 
