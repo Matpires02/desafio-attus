@@ -16,10 +16,11 @@ import {UpdateUserModel} from '../../models/user/update-user.model';
 import {CreateUserModel} from '../../models/user/create-user.model';
 import {MatError} from '@angular/material/input';
 import {inputClasses, selectClasses} from '../../shared/input-classes.util';
-import {NgClass} from '@angular/common';
+import {Location, NgClass} from '@angular/common';
 import {Observable} from 'rxjs';
 import {Button} from '../button/button';
 import {UserRole} from '../../models/user/user-role.enum';
+import {AdminService} from '../../service/admin/admin.service';
 
 @Component({
   selector: 'app-user-form',
@@ -43,6 +44,8 @@ export class UserFormComponent implements OnInit {
   protected readonly UserRole = UserRole;
   protected readonly selectClasses = selectClasses;
   private userService = inject(UserService);
+  private adminService = inject(AdminService);
+  protected location = inject(Location);
 
   protected _isAdmin = false;
 
@@ -51,6 +54,8 @@ export class UserFormComponent implements OnInit {
     if (value) {
       this.userForm.controls.roles.enable();
       this.userForm.controls.activated.enable();
+      this.userForm.controls.password.removeValidators(Validators.required);
+      this.userForm.controls.confirmPassword.removeValidators(Validators.required);
     }
 
   }
@@ -69,7 +74,11 @@ export class UserFormComponent implements OnInit {
     this.loading.set(true);
     const model = {...this.user, ...this.userForm.getRawValue()};
     if (this.user && this.user.id) {
-      this.doRequest(this.userService.updateUser({...model} as UpdateUserModel));
+      if (this._isAdmin) {
+        this.doRequest(this.adminService.updateUser({...model} as UpdateUserModel));
+      } else {
+        this.doRequest(this.userService.updateUser({...model} as UpdateUserModel));
+      }
     } else {
       this.doRequest(this.userService.createUser({...model} as CreateUserModel));
     }
